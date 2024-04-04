@@ -8,6 +8,7 @@ It includes:
 - selector component based on MUI
 - filtering
 - fetching by tanstack query
+- basic storybook
 
 # Setup Instructions
 
@@ -42,6 +43,12 @@ npm run dev
 
 ```
 npm run test
+```
+
+7. Run storybook
+
+```
+npm run storybook
 ```
 
 ## React + TypeScript + Vite

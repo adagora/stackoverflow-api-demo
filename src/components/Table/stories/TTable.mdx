@@ -1,0 +1,56 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { TTable } from "../TTable";
+
+<Meta title="Components/TTable" component={TTable} />
+
+# TTable
+
+The `TTable` component is used to display tabular data with pagination.
+
+## Usage
+
+The `TTable` component accepts the following props:
+
+- `rows`: (array) An array of objects representing the rows of data to be displayed.
+- `page`: (number) The current page number.
+- `rowsPerPage`: (number) The number of rows to display per page.
+- `count`: (number) The total count of rows.
+- `onPageChange`: (function) Callback function triggered when the page changes.
+- `onRowsPerPageChange`: (function) Callback function triggered when the rows per page changes.
+
+```jsx
+import React from "react";
+import { TTable } from "./TTable";
+
+const Example = () => {
+  const rows = [
+    { name: "Tag1", count: 10 },
+    { name: "Tag2", count: 20 },
+    { name: "Tag3", count: 30 }
+  ];
+  const page = 0;
+  const rowsPerPage = 10;
+  const count = rows.length;
+
+  const onPageChange = (event, newPage) => {
+    console.log("Page changed:", newPage);
+  };
+
+  const onRowsPerPageChange = (event) => {
+    console.log("Rows per page changed:", event.target.value);
+  };
+
+  return (
+    <TTable
+      rows={rows}
+      page={page}
+      rowsPerPage={rowsPerPage}
+      count={count}
+      onPageChange={onPageChange}
+      onRowsPerPageChange={onRowsPerPageChange}
+    />
+  );
+};
+
+<Example />;
+```

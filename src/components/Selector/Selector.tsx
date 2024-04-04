@@ -10,12 +10,19 @@ import React from "react";
 import SelectorOption from "./SelectorOption";
 
 const Selector: React.FC<SelectProps> = ({
+  /** The label for the selector. */
   label,
+  /** The current value of the selector. */
   value,
+  /** Callback function triggered when the value changes. */
   onChange,
+  /** The children elements of the selector. */
   children,
+  /** Custom styles for the selector. */
   style,
+  /** Boolean flag indicating if there is an error. */
   error,
+  /** Boolean flag indicating if the selector is disabled. */
   disabled
 }) => {
   return (
