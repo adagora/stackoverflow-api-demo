@@ -16,7 +16,7 @@ interface ITag {
 }
 
 interface ITTable {
-  rows: ITag[];
+  rows: ITag[] | undefined;
 }
 
 export const TTable: React.FC<ITTable & TablePaginationProps> = ({

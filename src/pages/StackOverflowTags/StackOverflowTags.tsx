@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Alert, Typography } from "@mui/material";
 import { Spinner } from "../../components/Spinner/Spinner";
 import { TTable } from "../../components/Table/TTable";
@@ -9,7 +9,7 @@ import {
 } from "./helpers/ActionBySelector";
 import { IStackOverflowTagsFilter } from "./@types/IStackOverflowTagsFilter";
 import "./StackOverflowTags.css";
-import { ITag } from "./@types/ITag";
+import { useGetTags } from "../../services/TagsServices";
 
 const initialState: IStackOverflowTagsFilter = {
   sortedBy: "popular",
@@ -20,37 +20,8 @@ const initialState: IStackOverflowTagsFilter = {
 
 function StackOverflowTags(): JSX.Element {
   const [state, setState] = useState(initialState);
-  const [tags, setTags] = useState<ITag[]>([]);
-  const [totalCount, setTotalCount] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
 
-  useEffect(() => {
-    fetchTags();
-  }, [state.sortedBy, state.sortedDirection, state.pageSize, state.page]);
-
-  const fetchTags = async (): Promise<void> => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `https://api.stackexchange.com/2.3/tags?page=${
-          state.page + 1
-        }&pagesize=${state.pageSize}&order=${state.sortedDirection}&sort=${
-          state.sortedBy
-        }&site=stackoverflow`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      const data = await response.json();
-      setTags(data.items);
-      setTotalCount(data.items.length);
-    } catch (error: any) {
-      setError(error.message as string);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: tags, isLoading, isError, error, refetch } = useGetTags(state);
 
   const handleSetState = useCallback(
     (stateItem: Partial<IStackOverflowTagsFilter>): void =>
@@ -75,22 +46,26 @@ function StackOverflowTags(): JSX.Element {
         </div>
       </div>
 
-      {error ? (
+      {isError ? (
         <div className="content-alert-error">
           <Alert severity="error">
-            Problem with fetching data, please try again later
+            Problem with fetching data, please try again later. Error:
+            {error.message}
+            <button onClick={() => refetch()}>
+              <Typography variant="button">Try again</Typography>
+            </button>
           </Alert>
         </div>
       ) : null}
 
-      {loading ? (
+      {isLoading ? (
         <Spinner />
       ) : (
         <TTable
           rows={tags}
           page={state.page}
           rowsPerPage={state.pageSize}
-          count={totalCount}
+          count={tags?.length || 0}
           onPageChange={(_, newPage) => {
             handleSetState({ page: newPage });
           }}
