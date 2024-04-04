@@ -7,6 +7,7 @@ It includes:
 - pagginated table,
 - selector component based on MUI
 - filtering
+- fetching by tanstack query
 
 # Setup Instructions
 

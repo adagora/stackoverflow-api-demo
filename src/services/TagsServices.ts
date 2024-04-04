@@ -1,10 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { IStackOverflowTagsFilter } from "../pages/StackOverflowTags/@types/IStackOverflowTagsFilter";
 import { ITag } from "../pages/StackOverflowTags/@types/ITag";
-
-export const secondInMilliseconds = 1000;
-export const minuteInMilliseconds = secondInMilliseconds * 60;
-export const hourInMilliseconds = minuteInMilliseconds * 60;
+import { API_BASE_URL, hourInMilliseconds } from "../components/const/const";
 
 export function useGetTags(
   state: IStackOverflowTagsFilter,
@@ -20,9 +17,9 @@ export function useGetTags(
     ],
     queryFn: async () => {
       const response = await fetch(
-        `https://api.stackexchange.com/2.3/tags?page=${
-          state.page + 1
-        }&pagesize=${state.pageSize}&order=${state.sortedDirection}&sort=${
+        `${API_BASE_URL}/tags?page=${state.page + 1}&pagesize=${
+          state.pageSize
+        }&order=${state.sortedDirection}&sort=${
           state.sortedBy
         }&site=stackoverflow`
       );
