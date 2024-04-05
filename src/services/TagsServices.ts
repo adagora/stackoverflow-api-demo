@@ -1,7 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { IStackOverflowTagsFilter } from "../pages/StackOverflowTags/@types/IStackOverflowTagsFilter";
 import { ITag } from "../pages/StackOverflowTags/@types/ITag";
-import { API_BASE_URL, hourInMilliseconds } from "../components/const/const";
+import { API_BASE_URL, hourInMilliseconds } from "../helpers/const";
 
 export function useGetTags(
   state: IStackOverflowTagsFilter,
