@@ -33,7 +33,7 @@ npm install
 4. Run the Project:
 
 ```
-npm run dev
+npm start
 ```
 
 5. Open the Application:
