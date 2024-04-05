@@ -17,9 +17,7 @@ export function useGetTags(
     ],
     queryFn: async () => {
       const response = await fetch(
-        `${API_BASE_URL}/tags?page=${state.page + 1}&pagesize=${
-          state.pageSize
-        }&order=${state.sortedDirection}&sort=${
+        `${API_BASE_URL}/tags?page=${state.page + 1}&order=${state.sortedDirection}&sort=${
           state.sortedBy
         }&site=stackoverflow`
       );
