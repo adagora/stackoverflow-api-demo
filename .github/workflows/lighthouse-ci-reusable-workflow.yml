@@ -26,6 +26,29 @@ on:
         description: "Path to the results summary script"
         required: false
         type: string
+    on:
+  workflow_dispatch:
+    inputs:
+      working-directory:
+        description: "Working Directory for the Lighthouse CI"
+        required: false
+        type: string
+      node-version:
+        description: "Node.js Version"
+        required: false
+        type: string
+      lhci-version:
+        description: "Lighthouse CI CLI Version"
+        required: false
+        type: string
+      lighthouserc-path:
+        description: "Path to lighthouserc.yml"
+        required: true
+        type: string
+      results-summary-script:
+        description: "Path to the results summary script"
+        required: true
+        type: string
 jobs:
   lighthouse-ci-audit:
     runs-on: ubuntu-latest
