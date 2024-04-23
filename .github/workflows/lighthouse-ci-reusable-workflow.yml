@@ -26,7 +26,6 @@ on:
         description: "Path to the results summary script"
         required: false
         type: string
-    on:
   workflow_dispatch:
     inputs:
       working-directory:
