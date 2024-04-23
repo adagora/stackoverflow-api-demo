@@ -3,7 +3,7 @@ ci:
     numberOfRuns: 2
     startServerCommand: npm start
     url:
-      - http://localhost:3000
+      - http://localhost:5173
   assert:
     includePassedAssertions: true
     assertions:
