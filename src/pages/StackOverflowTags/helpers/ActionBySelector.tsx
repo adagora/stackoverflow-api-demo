@@ -21,6 +21,7 @@ export const SortBySelector: React.FC<{
           sortedBy: target.value as "popular" | "activity" | "name"
         });
       }}
+      aria-labelledby="SortByLabel"
     >
       {sortOptions.map((option) => (
         <SelectorOption key={option.value} value={option.value}>
@@ -45,6 +46,7 @@ export const SortDirectionSelector: React.FC<{
           sortedDirection: target.value as "asc" | "desc"
         });
       }}
+      aria-labelledby="SortDirectionLabel"
     >
       {directionOptions.map((option) => (
         <SelectorOption key={option.value} value={option.value}>
@@ -69,6 +71,7 @@ export const PageSizeSelector: React.FC<{
           pageSize: parseInt(target.value as string, 10)
         });
       }}
+      aria-labelledby="PageSizeLabel"
     >
       {pageSizeOptions.map((option) => (
         <SelectorOption key={option.value} value={option.value}>
