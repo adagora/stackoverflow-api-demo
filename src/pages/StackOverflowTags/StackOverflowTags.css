@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   height: 100vh;
+  max-width: 500px;
 }
 
 .content {
@@ -19,4 +20,10 @@
 
 .content-alert-error {
   padding: 10px;
+}
+
+.container-breadcrumb {
+  min-height: 30px;
+  padding: 20px;
+  max-width: 500px;
 }

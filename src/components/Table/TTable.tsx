@@ -10,7 +10,7 @@ import {
   TablePaginationProps,
   Checkbox
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 /**
  * Represents a single tag.
@@ -28,6 +28,8 @@ interface ITag {
 
 interface ITTable {
   rows: ITag[] | undefined;
+  setSelectedPath: (path: string[]) => void;
+  scrollToRow: string | null;
 }
 
 /**
@@ -45,9 +47,24 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
   /** Callback function triggered when the page is changed. */
   onPageChange,
   /** Callback function triggered when the rows per page is changed. */
-  onRowsPerPageChange
+  onRowsPerPageChange,
+  /** The path to scroll to. */
+  setSelectedPath,
+  /** The row to scroll to. */
+  scrollToRow
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
+  const rowRefs = useRef<{ [key: string]: HTMLTableRowElement | null }>({});
+
+  useEffect(() => {
+    setSelectedPath(selected);
+    if (scrollToRow && rowRefs.current[scrollToRow]) {
+      rowRefs.current[scrollToRow]?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  }, [selected, setSelectedPath, scrollToRow]);
 
   const handleSelect = (name: string) => {
     const selectedIndex = selected.indexOf(name);
@@ -74,7 +91,7 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
   return (
     <>
       <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
+        <Table stickyHeader={!scrollToRow} aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox"></TableCell>
@@ -93,6 +110,7 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
                       key={item.name}
                       selected={isItemSelected}
                       onClick={() => handleSelect(item.name)}
+                      ref={(el) => (rowRefs.current[item.name] = el)}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox checked={isItemSelected} />

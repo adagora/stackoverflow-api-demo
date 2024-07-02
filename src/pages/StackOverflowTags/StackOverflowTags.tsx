@@ -10,6 +10,7 @@ import {
 import { IStackOverflowTagsFilter } from "./@types/IStackOverflowTagsFilter";
 import "./StackOverflowTags.css";
 import { useGetTags } from "../../services/TagsServices";
+import BreadcrumbNavigation from "../../components/Breadcrumbs/Breadcrumbs";
 
 const initialState: IStackOverflowTagsFilter = {
   sortedBy: "popular",
@@ -20,6 +21,8 @@ const initialState: IStackOverflowTagsFilter = {
 
 function StackOverflowTags(): JSX.Element {
   const [state, setState] = useState(initialState);
+  const [selectedPath, setSelectedPath] = useState<string[]>([]);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const { data: tags, isLoading, isError, error, refetch } = useGetTags(state);
 
@@ -34,7 +37,12 @@ function StackOverflowTags(): JSX.Element {
       <Typography variant="h1" color={"black"}>
         Tags
       </Typography>
-
+      <div className="container-breadcrumb">
+        <BreadcrumbNavigation
+          selectedPath={selectedPath}
+          onSelectedPathChange={(path) => setSelectedTag(path)}
+        />
+      </div>
       <div className="content">
         <div className="content-top">
           <SortBySelector value={state.sortedBy} onChange={handleSetState} />
@@ -73,6 +81,8 @@ function StackOverflowTags(): JSX.Element {
             handleSetState({ pageSize: +target.value });
             handleSetState({ page: 0 });
           }}
+          setSelectedPath={setSelectedPath}
+          scrollToRow={selectedTag}
         />
       )}
     </div>
