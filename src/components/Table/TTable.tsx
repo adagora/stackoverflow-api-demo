@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Table,
   TableBody,
@@ -102,7 +102,7 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
                 .map((item) => {
                   const isItemSelected = isSelected(item.name);
                   return (
-                    <>
+                    <React.Fragment key={item.name}>
                       <TableRow
                         key={item.name}
                         selected={isItemSelected}
@@ -124,19 +124,21 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
                                 : "Show details"
                             }
                           >
-                            <RoundButton
-                              onClick={(e) => handleExpand(e, item.name)}
-                              disabled={
-                                !item.collectives ||
-                                item.collectives.length === 0
-                              }
-                            >
-                              {isExpanded(item.name) ? (
-                                <ExpandLessIcon fontSize="inherit" />
-                              ) : (
-                                <ExpandMoreIcon fontSize="inherit" />
-                              )}
-                            </RoundButton>
+                            <>
+                              <RoundButton
+                                onClick={(e) => handleExpand(e, item.name)}
+                                disabled={
+                                  !item.collectives ||
+                                  item.collectives.length === 0
+                                }
+                              >
+                                {isExpanded(item.name) ? (
+                                  <ExpandLessIcon fontSize="inherit" />
+                                ) : (
+                                  <ExpandMoreIcon fontSize="inherit" />
+                                )}
+                              </RoundButton>
+                            </>
                           </TTooltip>
                         </TableCell>
                       </TableRow>
@@ -177,7 +179,7 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
                           </TableCell>
                         </TableRow>
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 })
             ) : (
