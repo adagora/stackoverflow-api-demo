@@ -23,7 +23,8 @@ const Selector: React.FC<SelectProps> = ({
   /** Boolean flag indicating if there is an error. */
   error,
   /** Boolean flag indicating if the selector is disabled. */
-  disabled
+  disabled,
+  ...props
 }) => {
   return (
     <FormControl style={{ padding: 5, ...style }}>
@@ -34,6 +35,7 @@ const Selector: React.FC<SelectProps> = ({
         value={value}
         onChange={onChange}
         disabled={disabled}
+        {...props}
       >
         {React.Children.map(
           children as React.ReactElement,

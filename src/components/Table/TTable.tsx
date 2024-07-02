@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import {
   Table,
   TableBody,
@@ -10,50 +11,35 @@ import {
   TablePaginationProps,
   Checkbox
 } from "@mui/material";
-import { useState, useEffect, useRef } from "react";
-
-/**
- * Represents a single tag.
- */
-interface ITag {
-  /**
-   * The name of the tag.
-   */
-  name: string;
-  /**
-   * The count of the tag.
-   */
-  count: number;
-}
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import { ITag } from "../../pages/StackOverflowTags/@types/ITag";
+import { RoundButton } from "../RoundButton/RoundButton";
+import { TCollapse } from "../Collapse/TCollapse";
+import { TTooltip } from "../Tooltip/TTooltip";
 
 interface ITTable {
-  rows: ITag[] | undefined;
+  rowsData: ITag[] | undefined;
   setSelectedPath: (path: string[]) => void;
   scrollToRow: string | null;
 }
 
 /**
- * TTable component displays tabular data with pagination and row selection.
+ * TTable component displays tabular data with pagination, row selection, and collapsible detail rows.
  */
 export const TTable: React.FC<ITTable & TablePaginationProps> = ({
-  /** The rows to display in the table. */
-  rows,
-  /** The current page number. */
+  rowsData,
   page,
-  /** The number of rows per page. */
   rowsPerPage,
-  /** The total number of rows. */
   count,
-  /** Callback function triggered when the page is changed. */
   onPageChange,
-  /** Callback function triggered when the rows per page is changed. */
   onRowsPerPageChange,
-  /** The path to scroll to. */
   setSelectedPath,
-  /** The row to scroll to. */
   scrollToRow
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
   const rowRefs = useRef<{ [key: string]: HTMLTableRowElement | null }>({});
 
   useEffect(() => {
@@ -86,43 +72,117 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
     setSelected(newSelected);
   };
 
+  const handleExpand = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    name: string
+  ) => {
+    event.stopPropagation();
+    setExpanded(expanded === name ? null : name);
+  };
+
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isExpanded = (name: string) => expanded === name;
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+      <TableContainer component={Paper} sx={{ maxHeight: 440, maxWidth: 500 }}>
         <Table stickyHeader={!scrollToRow} aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox"></TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Count</TableCell>
+              <TableCell>Details</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows && rows.length > 0 ? (
-              rows
+            {rowsData && rowsData.length > 0 ? (
+              rowsData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item) => {
                   const isItemSelected = isSelected(item.name);
                   return (
-                    <TableRow
-                      key={item.name}
-                      selected={isItemSelected}
-                      onClick={() => handleSelect(item.name)}
-                      ref={(el) => (rowRefs.current[item.name] = el)}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox checked={isItemSelected} />
-                      </TableCell>
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.count}</TableCell>
-                    </TableRow>
+                    <>
+                      <TableRow
+                        key={item.name}
+                        selected={isItemSelected}
+                        onClick={() => handleSelect(item.name)}
+                        ref={(element) =>
+                          (rowRefs.current[item.name] = element)
+                        }
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox checked={isItemSelected} />
+                        </TableCell>
+                        <TableCell>{item.name}</TableCell>
+                        <TableCell>{item.count}</TableCell>
+                        <TableCell width={1}>
+                          <TTooltip
+                            title={
+                              !item.collectives || item.collectives.length === 0
+                                ? "No details"
+                                : "Show details"
+                            }
+                          >
+                            <RoundButton
+                              onClick={(e) => handleExpand(e, item.name)}
+                              disabled={
+                                !item.collectives ||
+                                item.collectives.length === 0
+                              }
+                            >
+                              {isExpanded(item.name) ? (
+                                <ExpandLessIcon fontSize="inherit" />
+                              ) : (
+                                <ExpandMoreIcon fontSize="inherit" />
+                              )}
+                            </RoundButton>
+                          </TTooltip>
+                        </TableCell>
+                      </TableRow>
+                      {isExpanded(item.name) && (
+                        <TableRow>
+                          <TableCell colSpan={4}>
+                            <TCollapse in={isExpanded(item.name)}>
+                              {item.collectives &&
+                              item.collectives.length > 0 ? (
+                                <ul>
+                                  {item.collectives.map((collective) => (
+                                    <li
+                                      key={collective.slug}
+                                      style={{
+                                        listStyleType: "none"
+                                      }}
+                                    >
+                                      <strong>{collective.name}:</strong>{" "}
+                                      {collective.description}
+                                      {collective.external_links.map((link) => (
+                                        <div key={link.link}>
+                                          <a
+                                            href={link.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            {link.type}
+                                          </a>
+                                        </div>
+                                      ))}
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                "No collectives available"
+                              )}
+                            </TCollapse>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   );
                 })
             ) : (
               <TableRow>
-                <TableCell colSpan={3}>No data</TableCell>
+                <TableCell colSpan={4}>No data</TableCell>
               </TableRow>
             )}
           </TableBody>

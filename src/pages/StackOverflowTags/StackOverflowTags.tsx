@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Alert, Typography } from "@mui/material";
+import { Alert, Box, Typography } from "@mui/material";
 import { Spinner } from "../../components/Spinner/Spinner";
 import { TTable } from "../../components/Table/TTable";
 import {
@@ -10,7 +10,7 @@ import {
 import { IStackOverflowTagsFilter } from "./@types/IStackOverflowTagsFilter";
 import "./StackOverflowTags.css";
 import { useGetTags } from "../../services/TagsServices";
-import BreadcrumbNavigation from "../../components/Breadcrumbs/Breadcrumbs";
+import { TBreadcrumb } from "../../components/Breadcrumbs/Breadcrumbs";
 
 const initialState: IStackOverflowTagsFilter = {
   sortedBy: "popular",
@@ -24,7 +24,13 @@ function StackOverflowTags(): JSX.Element {
   const [selectedPath, setSelectedPath] = useState<string[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  const { data: tags, isLoading, isError, error, refetch } = useGetTags(state);
+  const {
+    data: tagsData,
+    isLoading,
+    isError,
+    error,
+    refetch
+  } = useGetTags(state);
 
   const handleSetState = useCallback(
     (stateItem: Partial<IStackOverflowTagsFilter>): void =>
@@ -38,12 +44,12 @@ function StackOverflowTags(): JSX.Element {
         Tags
       </Typography>
       <div className="container-breadcrumb">
-        <BreadcrumbNavigation
+        <TBreadcrumb
           selectedPath={selectedPath}
           onSelectedPathChange={(path) => setSelectedTag(path)}
         />
       </div>
-      <div className="content">
+      <div className="content-filters">
         <div className="content-top">
           <SortBySelector value={state.sortedBy} onChange={handleSetState} />
           <SortDirectionSelector
@@ -70,10 +76,10 @@ function StackOverflowTags(): JSX.Element {
         <Spinner />
       ) : (
         <TTable
-          rows={tags}
+          rowsData={tagsData}
           page={state.page}
           rowsPerPage={state.pageSize}
-          count={tags?.length || 0}
+          count={tagsData?.length || 0}
           onPageChange={(_, newPage) => {
             handleSetState({ page: newPage });
           }}

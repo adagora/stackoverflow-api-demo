@@ -72,6 +72,7 @@ export const PageSizeSelector: React.FC<{
         });
       }}
       aria-labelledby="PageSizeLabel"
+      sx={{ width: 100 }}
     >
       {pageSizeOptions.map((option) => (
         <SelectorOption key={option.value} value={option.value}>

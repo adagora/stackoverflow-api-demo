@@ -6,7 +6,7 @@ interface BreadcrumbProps {
   onSelectedPathChange?: (path: string) => void;
 }
 
-const BreadcrumbNavigation: React.FC<BreadcrumbProps> = ({
+export const TBreadcrumb: React.FC<BreadcrumbProps> = ({
   selectedPath,
   onSelectedPathChange
 }) => {
@@ -53,5 +53,3 @@ const BreadcrumbNavigation: React.FC<BreadcrumbProps> = ({
     </Breadcrumbs>
   );
 };
-
-export default BreadcrumbNavigation;
