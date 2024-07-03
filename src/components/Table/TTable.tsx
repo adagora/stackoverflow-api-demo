@@ -28,17 +28,25 @@ interface ITTable {
  * TTable component displays tabular data with pagination, row selection, and collapsible detail rows.
  */
 export const TTable: React.FC<ITTable & TablePaginationProps> = ({
+  /** The rows to display in the table. */
   rowsData,
+  /** The current page number. */
   page,
+  /** The number of rows per page. */
   rowsPerPage,
+  /** The total number of rows. */
   count,
+  /** Callback function triggered when the page is changed. */
   onPageChange,
+  /** Callback function triggered when the rows per page is changed. */
   onRowsPerPageChange,
+  /** The path to scroll to. */
   setSelectedPath,
+  /** The row to scroll to. */
   scrollToRow
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<string | null>();
 
   const rowRefs = useRef<{ [key: string]: HTMLTableRowElement | null }>({});
 
@@ -82,6 +90,15 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
 
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
   const isExpanded = (name: string) => expanded === name;
+
+  const handlePageChange = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setSelectedPath([]);
+    onPageChange(event, newPage);
+    setSelected([]);
+  };
 
   return (
     <>
@@ -143,7 +160,11 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
                         </TableCell>
                       </TableRow>
                       {isExpanded(item.name) && (
-                        <TableRow>
+                        <TableRow
+                          sx={{
+                            width: "inherit"
+                          }}
+                        >
                           <TableCell colSpan={4}>
                             <TCollapse in={isExpanded(item.name)}>
                               {item.collectives &&
@@ -194,7 +215,7 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
         component="div"
         count={count}
         page={page}
-        onPageChange={onPageChange}
+        onPageChange={handlePageChange}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={onRowsPerPageChange}
         rowsPerPageOptions={[10, 20, 30, 50, 100]}
