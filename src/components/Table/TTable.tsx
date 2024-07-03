@@ -40,7 +40,7 @@ export const TTable: React.FC<ITTable & TablePaginationProps> = ({
   onPageChange,
   /** Callback function triggered when the rows per page is changed. */
   onRowsPerPageChange,
-  /** The path to scroll to. */
+  /** The array of strings from selected row path to show on breadcrumbs component. */
   setSelectedPath,
   /** The row to scroll to. */
   scrollToRow
