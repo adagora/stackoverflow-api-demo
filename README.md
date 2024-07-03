@@ -1,14 +1,18 @@
-# Demo stackoverflow api
+# Demo stackoverflow
 
 tag browser UI provided by the StackOverflow API (https://api.stackexchange.com/docs).
 
 It includes:
 
-- pagginated table,
+- pagginated table
+- collapse table
 - selector component based on MUI
 - filtering
 - fetching by tanstack query
 - basic storybook
+- breadcrumb, that shows the path or hierarchy of the selected
+  row
+- row selection functionality
 
 # Setup Instructions
 
@@ -27,13 +31,13 @@ cd project-name
 3. Install Dependencies:
 
 ```
-npm install
+yarn install
 ```
 
 4. Run the Project:
 
 ```
-npm start
+yarn start
 ```
 
 5. Open the Application:
@@ -42,13 +46,13 @@ npm start
 6. Run test
 
 ```
-npm run test
+yarn run test
 ```
 
 7. Run storybook
 
 ```
-npm run storybook
+yarn run storybook
 ```
 
 ## React + TypeScript + Vite
